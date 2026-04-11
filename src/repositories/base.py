@@ -11,8 +11,8 @@ class BaseRepository:
         self.session = session
 
 
-    async def get_filtered(self, **filter_by):
-            query = select(self.model).filter_by(**filter_by)
+    async def get_filtered(self, *filter, **filter_by):
+            query = (select(self.model).filter(*filter).filter_by(**filter_by))
             result = await self.session.execute(query)
             return [self.schema.model_validate(model, from_attributes=True ) for model in result.scalars().all()] # model_validate переобразует orm объект в pydantic schemas, реализуем паттерн DataMapper.  from_attributes нужен чтобы из полей класса ORM привести к виду словаря pydantic
 
