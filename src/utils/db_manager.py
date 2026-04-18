@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.repositories.hotels import HotelsRepository
-from src.repositories.rooms import RoomsRepositories
+from src.repositories.rooms import RoomsRepository
 from src.repositories.users import UsersRepository
 from src.repositories.bookings import BookingsRepository
 
@@ -13,7 +13,7 @@ class DBManager:
         self.session: Optional[AsyncSession] = None
         # репозитории инициализируем позже
         self.hotels: Optional[HotelsRepository] = None
-        self.rooms: Optional[RoomsRepositories] = None
+        self.rooms: Optional[RoomsRepository] = None
         self.users: Optional[UsersRepository] = None
         self.bookings: Optional[BookingsRepository] = None
 
@@ -22,7 +22,7 @@ class DBManager:
         self.session = self.session_factory()
         # пробрасываем одну и ту же сессию в репозитории
         self.hotels = HotelsRepository(self.session)
-        self.rooms = RoomsRepositories(self.session)
+        self.rooms = RoomsRepository(self.session)
         self.users = UsersRepository(self.session)
         self.bookings = BookingsRepository(self.session)
         return self

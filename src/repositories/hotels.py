@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy import insert, select, update, delete
 
 from src.models.hotels import HotelsOrm
@@ -5,6 +7,9 @@ from src.repositories.base import BaseRepository
 from pydantic import BaseModel
 
 from src.schemas.hotels import Hotel
+
+from src.models.rooms import RoomsOrm
+from src.repositories.utils import rooms_ids_for_booking
 
 
 class HotelsRepository(BaseRepository):
@@ -32,5 +37,15 @@ class HotelsRepository(BaseRepository):
         query = select(self.model).filter_by(id=id)
         result = await self.session.execute(query)
         return result.scalar_one()
+
+
+    async def get_filtered_by_time(self, date_from:date, date_to: date):
+        rooms_ids_to_get = rooms_ids_for_booking(date_from=date_from,date_to=date_to)
+        hotels_ids_to_get = (
+             select(RoomsOrm.hotel_id)
+             .select_from(RoomsOrm)
+             .filter(RoomsOrm.id.in_(rooms_ids_to_get))
+         )
+        return await self.get_filtered(HotelsOrm.id.in_(hotels_ids_to_get))
 
 
