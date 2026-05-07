@@ -4,7 +4,7 @@ from src.api.dependencies import DBDep, UserIdDep
 from src.schemas.facilities import FacilityAdd
 
 
-router = APIRouter(prefix="/facilietis")
+router = APIRouter(prefix="/facilities", tags=["Удобства"])
 
 @router.get("/")
 async def get_facilities(db: DBDep):
