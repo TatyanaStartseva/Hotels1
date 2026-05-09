@@ -38,21 +38,34 @@ async def delete_room(hotel_id: int, room_id : int, db : DBDep):
     return result
 
 @router.patch('/{hotel_id}/rooms/{room_id}', summary='Изменить часть информации об комнате')
-async def patch_room(hotel_id:int,room_id:int, room_data: PatchRoomRequest, db : DBDep):
-    _room_data = PatchRoom(hotel_id=hotel_id,**room_data.model_dump(exclude_unset=True))
-    res = await db.rooms.edit(_room_data, exclude_unset=True, id = room_id, hotel_id=hotel_id)
-    if res["status"] == 'success':
-        await db.commit()
-        return {"status": "Ok"}
-    else:
-        raise HTTPException(status_code=404, detail="Room not found")
+async def patch_room(hotel_id: int, room_id: int, room_data: PatchRoomRequest, db: DBDep):
+    room_data_dict = room_data.model_dump(exclude_unset=True)
+
+    facilities_ids = room_data_dict.pop("facilities_ids", None)
+
+    if room_data_dict:
+        _room_data = PatchRoom(hotel_id=hotel_id, **room_data_dict)
+
+        await db.rooms.edit(
+            _room_data,
+            exclude_unset=True,
+            id=room_id,
+            hotel_id=hotel_id,
+        )
+
+    if facilities_ids is not None:
+        await db.rooms_facilities.set_room_facilities(
+            room_id=room_id,
+            facilities_ids=facilities_ids,
+        )
+
+    await db.commit()
+    return {"status": "OK"}
 
 @router.put("/{hotel_id}/rooms/{room_id}",summary='Изменение информации об комнате')
 async def edit_room(hotel_id:int, room_id:int, room_data: RoomAddRequest, db : DBDep):
     _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dupm())
-    res = await db.rooms.edit(_room_data,id = room_id)
-    if res["status"] == 'success':
-        await db.commit()
-        return {"status": "Ok"}
-    else:
-        raise HTTPException(status_code=404, detail="Room not found")
+    await db.rooms.edit(_room_data,id = room_id)
+    await db.rooms_facilities.set_room_facilities(room_id= room_id, facilities_ids= room_data.facilities_ids)
+    await db.commit()
+    return {"status": "Ok"}

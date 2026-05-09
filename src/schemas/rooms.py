@@ -5,7 +5,7 @@ class RoomAddRequest(BaseModel):
     description: str | None = Field(None)
     price: int
     quantity: int
-    facilities_ids: list[int] | None
+    facilities_ids: list[int] = []
 
 
 class RoomAdd(BaseModel):
@@ -14,6 +14,7 @@ class RoomAdd(BaseModel):
     description: str | None = Field(None)
     price: int
     quantity: int
+    facilities_ids: list[int] = []
 
 
 class Room(RoomAdd):
@@ -25,6 +26,7 @@ class PatchRoomRequest(BaseModel):
     description: str | None = Field(None)
     price: int| None = Field(None)
     quantity: int| None = Field(None)
+    facilities_ids: list[int] = []
 
 
 class PatchRoom(BaseModel):
@@ -33,4 +35,3 @@ class PatchRoom(BaseModel):
     description: str | None = Field(None)
     price: int| None = Field(None)
     quantity: int| None = Field(None)
-
