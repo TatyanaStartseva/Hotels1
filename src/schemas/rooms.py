@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
+from src.schemas.facilities import Facility
 
 class RoomAddRequest(BaseModel):
     title: str
@@ -35,3 +36,7 @@ class PatchRoom(BaseModel):
     description: str | None = Field(None)
     price: int| None = Field(None)
     quantity: int| None = Field(None)
+
+
+class RoomWithRels(Room):
+    facilities: list[Facility]

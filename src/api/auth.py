@@ -4,8 +4,8 @@ from src.api.dependencies import UserIdDep, DBDep
 from src.schemas.users import UserRequestAdd, UserAdd
 from src.services.auth import AuthService
 from sqlalchemy.exc import IntegrityError
-router = APIRouter(prefix='/auth',tags=['Авторизация и аутенфикация'] )
 
+router = APIRouter(prefix='/auth',tags=['Авторизация и аутенфикация'] )
 
 @router.post("/register")
 async def register_user(
