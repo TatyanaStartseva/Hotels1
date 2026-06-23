@@ -11,10 +11,12 @@ from src.schemas.rooms import Room, RoomWithRels
 
 from src.repositories.utils import rooms_ids_for_booking
 
+from src.repositories.mappers.mappers import RoomDataMapper
+
 
 class RoomsRepository(BaseRepository):
     model = RoomsOrm
-    schema = Room
+    mapper = RoomDataMapper
 
     class RoomsRepository(BaseRepository):
         model = RoomsOrm
