@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+
+
 class Settings(BaseSettings):
     DB_NAME: str # валиадация данных из env, усли получим не строку, то будет ошибка
     DB_HOST:str
@@ -9,6 +11,10 @@ class Settings(BaseSettings):
     AMADEUS_KEY:str
     AMADEUS_SECRET :str
     OFFERS_TTL_MINUTES:int
+
+    REDIS_HOST: str
+    REDIS_PORT: int
+
     @property
     def DB_URL(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
